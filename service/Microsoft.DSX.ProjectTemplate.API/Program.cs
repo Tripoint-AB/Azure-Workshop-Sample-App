@@ -1,10 +1,13 @@
 ﻿using Microsoft.AspNetCore.Hosting;
 using Microsoft.DSX.ProjectTemplate.Data;
+using Microsoft.DSX.ProjectTemplate.Infrastructure;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using System;
+using System.IO;
 
 namespace Microsoft.DSX.ProjectTemplate.API
 {
@@ -43,7 +46,17 @@ namespace Microsoft.DSX.ProjectTemplate.API
         {
             return Host
                 .CreateDefaultBuilder(args)
-                .ConfigureWebHostDefaults(webBuilder => webBuilder.UseStartup<Startup>());
+                .ConfigureWebHostDefaults(webBuilder => webBuilder.UseStartup<Startup>())
+                .ConfigureAppConfiguration((builderContext, config) =>
+                 {
+#if DEBUG
+                     var basePath = ConfigExtensions.GetSettingsDirectory();
+#else
+                     var basePath = Directory.GetCurrentDirectory();
+#endif
+                     config.SetBasePath(basePath);
+                     config.AddJsonFile("appsettings.json", optional: false);
+                 });
         }
 
         private static void RunDatabaseMigrations(IHost host, ILogger logger)

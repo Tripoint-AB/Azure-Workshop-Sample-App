@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Net;
 using System.Text;
 using System.Threading;
@@ -13,6 +14,7 @@ using Microsoft.DSX.ProjectTemplate.Data.DTOs;
 using Microsoft.DSX.ProjectTemplate.Data.Models;
 using Microsoft.DSX.ProjectTemplate.Infrastructure;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Newtonsoft.Json;
@@ -33,19 +35,29 @@ namespace Microsoft.DSX.ProjectTemplate.ConsoleApplication
             ServicePointManager.DefaultConnectionLimit = 24;
             
             var host = new HostBuilder()
+                 .ConfigureAppConfiguration((builderContext, config) =>
+                 {
+#if DEBUG
+                     var basePath = ConfigExtensions.GetSettingsDirectory();
+#else
+                     var basePath = Directory.GetCurrentDirectory();
+#endif
+                     config.SetBasePath(basePath);
+                     config.AddJsonFile("appsettings.json", optional: false);
+                 })
                 .ConfigureServices((context, collection) =>
                 {
                     var services = collection;
                     var options = services.LoadOptions(context);
                     services
-                        .AddDbConnections(options)
+                        .AddDbConnections(context.Configuration,options)
                         .AddAutoMapperProfiles()
                         .AddServices()
                         .AddMediatR(typeof(HandlerBase))
                         .AddOptions();
-                    SqlConnectionString = options.AppSettings.ConnectionStrings.Database;
-                    ServiceBusConnectionString = options.AppSettings.Dependencies.ServiceBus;
-                    QueueName = options.AppSettings.Dependencies.Topic;
+                    SqlConnectionString = options.ConnectionStrings.Database;
+                    ServiceBusConnectionString = options.Dependencies.ServiceBus;
+                    QueueName = options.Dependencies.Topic;
                 }).Build();
             await RunAsync(host);
 

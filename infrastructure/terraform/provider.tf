@@ -12,7 +12,7 @@ provider "azurerm" {
 terraform {
   backend "azurerm" {
     resource_group_name  = "rg-workshop"
-    storage_account_name = "stotfstate"
+    storage_account_name = "stotfstateci"
     container_name       = "state"
     key                  = "ci/terraform.tfstate"
   }

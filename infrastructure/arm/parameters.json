@@ -6,10 +6,10 @@
             "value": "westeurope"
         },
         "networkInterfaceName": {
-            "value": "test-workshop-nic"
+            "value": "nic-workshop-ci"
         },
         "networkSecurityGroupName": {
-            "value": "test-workshop-nsg"
+            "value": "nsg-workshop-ci"
         },
         "networkSecurityGroupRules": {
             "value": [
@@ -29,28 +29,13 @@
             ]
         },
         "subnetName": {
-            "value": "default"
+            "value": "subnet-computing"
         },
-        "virtualNetworkName": {
-            "value": "vnet"
-        },
-        "addressPrefixes": {
-            "value": [
-                "10.0.0.0/24"
-            ]
-        },
-        "subnets": {
-            "value": [
-                {
-                    "name": "default",
-                    "properties": {
-                        "addressPrefix": "10.0.0.0/24"
-                    }
-                }
-            ]
+        "virtualNetworkId": {
+            "value": "/subscriptions/1509f7d9-f932-40e5-926b-a249815bf4c6/resourceGroups/rg-workshop/providers/Microsoft.Network/virtualNetworks/vnet"
         },
         "publicIpAddressName": {
-            "value": "test-workshop-ip"
+            "value": "ip-workshop-ci"
         },
         "publicIpAddressType": {
             "value": "Dynamic"
@@ -59,10 +44,10 @@
             "value": "Basic"
         },
         "virtualMachineName": {
-            "value": "test-workshop"
+            "value": "vm-workshop-ci"
         },
         "virtualMachineComputerName": {
-            "value": "test-workshop"
+            "value": "vm-workshop-ci"
         },
         "virtualMachineRG": {
             "value": "rg-workshop"
@@ -78,7 +63,7 @@
                     "caching": "None",
                     "writeAcceleratorEnabled": false,
                     "id": null,
-                    "name": "disk-ecom-job-ci",
+                    "name": "disk-data-workshop-ci",
                     "storageAccountType": null,
                     "diskSizeGB": null,
                     "diskEncryptionSet": null
@@ -88,10 +73,10 @@
         "dataDiskResources": {
             "value": [
                 {
-                    "name": "disk-ecom-job-ci",
+                    "name": "disk-data-workshop-ci",
                     "sku": "Premium_LRS",
                     "properties": {
-                        "diskSizeGB": 1024,
+                        "diskSizeGB": 32,
                         "creationData": {
                             "createOption": "empty"
                         }
@@ -100,7 +85,7 @@
             ]
         },
         "virtualMachineSize": {
-            "value": "Standard_D2s_v3"
+            "value": "Standard_DS1_v2"
         },
         "adminUsername": {
             "value": "VMAdmin"
@@ -110,6 +95,21 @@
         },
         "patchMode": {
             "value": "AutomaticByOS"
+        },
+        "autoShutdownStatus": {
+            "value": "Enabled"
+        },
+        "autoShutdownTime": {
+            "value": "19:00"
+        },
+        "autoShutdownTimeZone": {
+            "value": "UTC"
+        },
+        "autoShutdownNotificationStatus": {
+            "value": "Disabled"
+        },
+        "autoShutdownNotificationLocale": {
+            "value": "en"
         }
     }
 }

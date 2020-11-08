@@ -13,6 +13,13 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Content Include="..\Solution Items\appsettings.Development.json" Link="appsettings.Development.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\Solution Items\appsettings.json" Link="appsettings.json" CopyToOutputDirectory="Always" />
+  </ItemGroup>
+  
+  <ItemGroup>
     <PackageReference Include="MediatR" Version="8.1.0" />
     <PackageReference Include="MediatR.Extensions.Microsoft.DependencyInjection" Version="8.1.0" />
     <PackageReference Include="Microsoft.AspNetCore.SpaServices.Extensions" Version="3.1.5" />
@@ -44,11 +51,6 @@
     <ProjectReference Include="..\Microsoft.DSX.ProjectTemplate.Infrastructure\Microsoft.DSX.ProjectTemplate.Infrastructure.csproj" />
   </ItemGroup>
 
-  <!-- https://github.com/RicoSuter/NSwag/wiki/Assembly-loading#net-core -->
-  <!-- build TypeScript client and DTOs for this backend -->
-  <Target Name="NSwag" AfterTargets="Build">
-    <Exec Command="$(NSwagExe_Core31) run nswag.json /variables:Configuration=$(Configuration)" />
-  </Target>
 
   <Target Name="PublishRunWebpack" AfterTargets="ComputeFilesToPublish">
     <!-- As part of publishing, ensure the JS resources are freshly built in production mode -->

@@ -20,25 +20,27 @@ To be able to run and deploy this sample application you need these tools:
 # Infrastructure (CLI & As-code)
 0. Optional: If you do not have an Azure Subscriptions, follow this [guide](https://azure.microsoft.com/en-us/free/search/?&ef_id=EAIaIQobChMIv-mItvPy7AIVj6SyCh0E0Q8OEAAYASAAEgJDzfD_BwE:G:s&OCID=AID2100115_SEM_EAIaIQobChMIv-mItvPy7AIVj6SyCh0E0Q8OEAAYASAAEgJDzfD_BwE:G:s) and create one.
 1. AZ cli: Start a terminal session (Powerhell, in the current folder) and run `az login` to login into your account.
-2. AZ cli: Start with creating a Resource group "rg-workshop", `az group create --name rg-workshop --location westeurope`.
-3. Azure Portal: Create a Virtual Network through the Azure Portal (with name "vnet"), with address space `10.0.0.0/16` and add a subnet "default" with CIDR address `10.0.0.0/24` OR run `az network vnet create -g rg-workshop  -n vnet  --address-prefixes 10.0.0.0/16  -l westeurope`. Read here for [More Info](https://docs.microsoft.com/en-us/azure/virtual-network/quick-create-portal)
-4. AZ cli and ARM: Create a Virtual Machine by using Azure CLI
+2. AZ cli: Run `az account set -s <YOUR-SUBSCRIPTION-NAME>`
+3. AZ cli: Start with creating a Resource group, `az group create --name rg-workshop --location westeurope`.
+4. Azure Portal: Create a Virtual Network through the Azure Portal (with name "vnet"), with address space `10.0.0.0/16` and add a subnet "default" with CIDR address `10.0.0.0/24` OR run `az network vnet create -g rg-workshop  -n vnet  --address-prefixes 10.0.0.0/16  -l westeurope`. Read here for [More Info](https://docs.microsoft.com/en-us/azure/virtual-network/quick-create-portal)
+5. AZ cli and ARM: Create a Virtual Machine by using Azure CLI
    1. Remember to add a password for your VM here './infrastructure/arm/parameters.json'
-   2. Run `az deployment group create --resource-group rg-workshop --template-file ./infrastructure/ARM/template.json --parameters ./infrastructure/ARM/parameters.json`.
-5. AZ cli: Create a Service Bus and a Queue
+   2. Run `az network vnet subnet create  -g rg-workshop -n subnet-computing  --vnet-name vnet --address-prefix 10.0.1.0/24`
+   3. Run `az deployment group create --resource-group rg-workshop --template-file ./infrastructure/ARM/template.json --parameters ./infrastructure/ARM/parameters.json`.
+6. AZ cli: Create a Service Bus and a Queue
    1.  `az servicebus namespace create --resource-group rg-workshop --name sb-workshop-ci --location westeurope`
    2. `az servicebus queue create --resource-group rg-workshop --namespace-name sb-workshop-ci --name test`
    3. `az servicebus namespace authorization-rule keys list --resource-group rg-workshop --namespace-name sb-workshop-ci --name RootManageSharedAccessKey --query primaryConnectionString --output tsv`
-6. AZ cli: Create a SQL Server and a SQL Database
+7. AZ cli: Create a SQL Server and a SQL Database
    1. `az sql server create --name sql-workshop-ci --resource-group rg-workshop --location "westeurope" --admin-user sqladmin --admin-password <YOUR-PASSWORD>`
    2. `az sql server firewall-rule create -g rg-workshop -s sql-workshop-ci -n azureservices --start-ip-address 0.0.0.0 --end-ip-address 0.0.0.0`
    3. `az sql db create --resource-group rg-workshop  --server sql-workshop-ci --name workshop`
    4. `az network vnet subnet create  -g rg-workshop -n subnet-sql  --vnet-name vnet --address-prefix 10.0.9.0/24  --service-endpoints Microsoft.SQL`
    5. `az sql server vnet-rule create --server sql-workshop-ci --name vnet-rule -g rg-workshop --subnet subnet-sql --vnet-name vnet`
-7. AZ cli: Create a Storage and Container
-   1. `az storage account create --name stotfstatedev --resource-group rg-workshop --location westeurope --sku Standard_ZRS --encryption-services blob`
-   2. `az storage container create --account-name stotfstatedev --name state --auth-mode login`
-8. Terraform: Create an App Service with terraform and azurerm provider
+8. AZ cli: Create a Storage and Container
+   1. `az storage account create --name stotfstateci --resource-group rg-workshop --location westeurope --sku Standard_ZRS --encryption-services blob`
+   2. `az storage container create --account-name stotfstateci --name state --auth-mode login`
+9. Terraform: Create an App Service with terraform and azurerm provider
    1. Open './infrastructure/terraform/' in VS code and add you subscription id and tennat id in './infrastructure/terraform/provider.tf'
    2. Navigate to './infrastructure/terraform/' in your terminal
    3.  In Terminal, run `terraform init` and then `terraform apply -auto-approve`
@@ -60,7 +62,7 @@ To be able to run and deploy this sample application you need these tools:
 
 1. [Download and install the .NET Core SDK](https://dotnet.microsoft.com/download)
     * If you don't have `localdb` available on your system, [Download and install SQL Server Express](https://docs.microsoft.com/en-us/sql/database-engine/configure-windows/sql-server-express-localdb)
-    * NOTE: We will remove the `localdb` requirement in a future PR
+    * Or use the previously provisioned azure infra.
 2. Open a terminal such as **PowerShell**, **Command Prompt**, or **bash** and navigate to the `service` folder
 3. Run the following `dotnet` commands:
 ```sh
@@ -69,6 +71,7 @@ dotnet run --project Microsoft.DSX.ProjectTemplate.API
 dotnet run --project Microsoft.DSX.ProjectTemplate.ConsoleApplication.API
 ```
 3. Open your browser to: `https://localhost:44345/swagger`.
+4. If you are debugging and you get `Microsoft.Data.SqlClient.SqlException: 'Cannot open server 'sql-workshop-ci' requested by the login. Client with IP address 'xx.xxx.xx.xxx' is not allowed to access the server.  To enable access, use the Windows Azure Management Portal or run sp_set_firewall_rule on the master database to create a firewall rule for this IP address or address range.  It may take up to five minutes for this change to take effect.'`, you need to add your IP to SQL Server Firewall.
 
 # Deployment
 To use the previously created infrastructure, we can deploy our sample app './service/Microsoft.DSX.ProjectTemplate' to it. There is many ways to deploy an application to Azure but we choose the easiest one by using Visual Studio to publish.
@@ -83,4 +86,5 @@ To use the previously created infrastructure, we can deploy our sample app './se
 5. Copy the previously published console application `./service/Microsoft.DSX.ProjectTemplate.ConsoleApplication/bin/Release/netcoreapp3.1/` to your VM through the RDP session.
 6. Start the console application in your VM by running `./service/Microsoft.DSX.ProjectTemplate.ConsoleApplication/bin/Release/netcoreapp3.1/Microsoft.DSX.ProjectTemplate.ConsoleApplication.exe`
 7. In a browser: Navigate to [Your API Swagger Page](https://api-workshop-ci.azurewebsites.net/swagger), use the Swagger UI to Get or Create Data. More info on how to use the Swagger UI, please read [Here](https://www.blazemeter.com/blog/getting-started-with-swagger-ui).
+
 

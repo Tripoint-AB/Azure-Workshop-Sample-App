@@ -18,7 +18,7 @@ namespace Microsoft.DSX.ProjectTemplate.Infrastructure
     public class AzureServiceBusEventService : AzureTopicAdapter, IMessageService
     {
 
-        public AzureServiceBusEventService(IOptions<Options> options) : base(options)
+        public AzureServiceBusEventService(IOptions<AppSettings> options) : base(options)
         {
             
         }
@@ -73,10 +73,10 @@ namespace Microsoft.DSX.ProjectTemplate.Infrastructure
 
 
 
-        protected AzureTopicAdapter(IOptions<Options> options)
+        protected AzureTopicAdapter(IOptions<AppSettings> options)
         {
-            ConnectionString = options.Value.AppSettings.Dependencies.ServiceBus;
-            TopicName = options.Value.AppSettings.Dependencies.Topic;
+            ConnectionString = options.Value.Dependencies.ServiceBus;
+            TopicName = options.Value.Dependencies.Topic;
             _client = new Lazy<IQueueClient>(GetClient);
         }
 

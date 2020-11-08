@@ -16,6 +16,7 @@ using System.Threading.Tasks;
 using System.Web;
 using Microsoft.AspNetCore.Http.Extensions;
 using Microsoft.DSX.ProjectTemplate.Infrastructure;
+using Microsoft.Extensions.Configuration;
 
 namespace Microsoft.DSX.ProjectTemplate.API
 {
@@ -75,12 +76,10 @@ namespace Microsoft.DSX.ProjectTemplate.API
         /// <summary>
         /// Register the database connections used by the API with DI.
         /// </summary>
-        public static IServiceCollection AddDbConnections(this IServiceCollection services, Options configuration)
+        public static IServiceCollection AddDbConnections(this IServiceCollection services,IConfiguration configuration, AppSettings configOptions)
         {
-            
-
             return services.AddDbContext<ProjectTemplateDbContext>(options => options
-                .UseSqlServer(configuration.AppSettings.ConnectionStrings.Database));
+                .UseSqlServer(configOptions.ConnectionStrings.Database));
         }
 
         /// <summary>

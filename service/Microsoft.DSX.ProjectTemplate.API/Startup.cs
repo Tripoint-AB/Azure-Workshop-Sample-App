@@ -37,7 +37,7 @@ namespace Microsoft.DSX.ProjectTemplate.API
         {
             var appOptions = services.LoadOptions(_configuration);
             services
-                .AddDbConnections(appOptions)
+                .AddDbConnections(_configuration,appOptions)
                 .AddAutoMapperProfiles()
                 .AddServices()
                 .AddMediatR(typeof(HandlerBase))

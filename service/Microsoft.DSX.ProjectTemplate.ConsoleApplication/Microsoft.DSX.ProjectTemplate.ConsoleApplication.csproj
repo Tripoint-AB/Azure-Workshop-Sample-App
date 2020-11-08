@@ -1,0 +1,19 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <OutputType>Exe</OutputType>
+        <TargetFramework>netcoreapp3.1</TargetFramework>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <PackageReference Include="MediatR" Version="8.1.0" />
+      <PackageReference Include="Microsoft.Azure.ServiceBus" Version="4.1.4" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\Microsoft.DSX.ProjectTemplate.API\Microsoft.DSX.ProjectTemplate.API.csproj" />
+      <ProjectReference Include="..\Microsoft.DSX.ProjectTemplate.Command\Microsoft.DSX.ProjectTemplate.Command.csproj" />
+      <ProjectReference Include="..\Microsoft.DSX.ProjectTemplate.Infrastructure\Microsoft.DSX.ProjectTemplate.Infrastructure.csproj" />
+    </ItemGroup>
+
+</Project>

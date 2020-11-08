@@ -6,10 +6,10 @@
             "value": "westeurope"
         },
         "networkInterfaceName": {
-            "value": "nic-ecom-job-ci"
+            "value": "test-workshop-nic"
         },
         "networkSecurityGroupName": {
-            "value": "nsg-ecom-ci"
+            "value": "test-workshop-nsg"
         },
         "networkSecurityGroupRules": {
             "value": [
@@ -29,28 +29,43 @@
             ]
         },
         "subnetName": {
-            "value": "subnet-compute"
+            "value": "default"
         },
-        "virtualNetworkId": {
-            "value": "/subscriptions/1509f7d9-f932-40e5-926b-a249815bf4c6/resourceGroups/Kollmorgen/providers/Microsoft.Network/virtualNetworks/vnet-ecom-ci"
+        "virtualNetworkName": {
+            "value": "vnet"
+        },
+        "addressPrefixes": {
+            "value": [
+                "10.0.0.0/24"
+            ]
+        },
+        "subnets": {
+            "value": [
+                {
+                    "name": "default",
+                    "properties": {
+                        "addressPrefix": "10.0.0.0/24"
+                    }
+                }
+            ]
         },
         "publicIpAddressName": {
-            "value": "ip-ecom-job-ci"
+            "value": "test-workshop-ip"
         },
         "publicIpAddressType": {
-            "value": "Static"
+            "value": "Dynamic"
         },
         "publicIpAddressSku": {
-            "value": "Standard"
+            "value": "Basic"
         },
         "virtualMachineName": {
-            "value": "vm-ecom-job-ci"
+            "value": "test-workshop"
         },
         "virtualMachineComputerName": {
-            "value": "vm-ecom-job-ci"
+            "value": "test-workshop"
         },
         "virtualMachineRG": {
-            "value": "Kollmorgen"
+            "value": "rg-workshop"
         },
         "osDiskType": {
             "value": "Premium_LRS"
@@ -85,37 +100,16 @@
             ]
         },
         "virtualMachineSize": {
-            "value": "Standard_B1s"
+            "value": "Standard_D2s_v3"
         },
         "adminUsername": {
-            "value": "EcomAdmin"
+            "value": "VMAdmin"
         },
         "adminPassword": {
-            "value": "Workshop2020"
+            "value": null
         },
         "patchMode": {
             "value": "AutomaticByOS"
-        },
-        "zone": {
-            "value": "1"
-        },
-        "autoShutdownStatus": {
-            "value": "Enabled"
-        },
-        "autoShutdownTime": {
-            "value": "23:00"
-        },
-        "autoShutdownTimeZone": {
-            "value": "W. Europe Standard Time"
-        },
-        "autoShutdownNotificationStatus": {
-            "value": "Enabled"
-        },
-        "autoShutdownNotificationLocale": {
-            "value": "en"
-        },
-        "autoShutdownNotificationEmail": {
-            "value": "hamdoon.mohammad@tripoint.se"
         }
     }
 }

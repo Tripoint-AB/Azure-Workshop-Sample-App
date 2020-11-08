@@ -1,12 +1,12 @@
 data "azurerm_resource_group" "resource_group" {
-  name = "Kollmorgen"
+  name = "rg-workshop"
 }
 
 data "azurerm_subscription" "main" {
 }
 
 resource "azurerm_app_service_plan" "webapps" {
-  name                = "asp-webshop-ci"
+  name                = "asp-workshop-ci"
   location            = data.azurerm_resource_group.resource_group.location
   resource_group_name = data.azurerm_resource_group.resource_group.name
 
@@ -22,7 +22,7 @@ resource "azurerm_app_service_plan" "webapps" {
 
 
 resource "azurerm_app_service" "web" {
-  name                = "web-webshop-ci"
+  name                = "api-workshop-ci"
   location            = data.azurerm_resource_group.resource_group.location
   resource_group_name = data.azurerm_resource_group.resource_group.name
   app_service_plan_id = azurerm_app_service_plan.webapps.id
@@ -49,7 +49,7 @@ resource "azurerm_app_service" "web" {
 }
 
 data "azurerm_virtual_network" "vnet" {
-  name                = "vnet-ecom-ci"
+  name                = "vnet"
   resource_group_name = data.azurerm_resource_group.resource_group.name
 }
 
@@ -70,7 +70,7 @@ resource "azurerm_subnet" "subnet_appservices" {
 
 }
 
-resource "azurerm_app_service_virtual_network_swift_connection" "vnet_integration5" {
+resource "azurerm_app_service_virtual_network_swift_connection" "vnet_integration" {
   app_service_id = azurerm_app_service.web.id
   subnet_id      = azurerm_subnet.subnet_appservices.id
 }

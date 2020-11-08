@@ -17,8 +17,14 @@
         "subnetName": {
             "type": "string"
         },
-        "virtualNetworkId": {
+        "virtualNetworkName": {
             "type": "string"
+        },
+        "addressPrefixes": {
+            "type": "array"
+        },
+        "subnets": {
+            "type": "array"
         },
         "publicIpAddressName": {
             "type": "string"
@@ -58,32 +64,11 @@
         },
         "patchMode": {
             "type": "string"
-        },
-        "zone": {
-            "type": "string"
-        },
-        "autoShutdownStatus": {
-            "type": "string"
-        },
-        "autoShutdownTime": {
-            "type": "string"
-        },
-        "autoShutdownTimeZone": {
-            "type": "string"
-        },
-        "autoShutdownNotificationStatus": {
-            "type": "string"
-        },
-        "autoShutdownNotificationLocale": {
-            "type": "string"
-        },
-        "autoShutdownNotificationEmail": {
-            "type": "string"
         }
     },
     "variables": {
         "nsgId": "[resourceId(resourceGroup().name, 'Microsoft.Network/networkSecurityGroups', parameters('networkSecurityGroupName'))]",
-        "vnetId": "[parameters('virtualNetworkId')]",
+        "vnetId": "[resourceId(resourceGroup().name,'Microsoft.Network/virtualNetworks', parameters('virtualNetworkName'))]",
         "subnetRef": "[concat(variables('vnetId'), '/subnets/', parameters('subnetName'))]"
     },
     "resources": [
@@ -94,6 +79,7 @@
             "location": "[parameters('location')]",
             "dependsOn": [
                 "[concat('Microsoft.Network/networkSecurityGroups/', parameters('networkSecurityGroupName'))]",
+                "[concat('Microsoft.Network/virtualNetworks/', parameters('virtualNetworkName'))]",
                 "[concat('Microsoft.Network/publicIpAddresses/', parameters('publicIpAddressName'))]"
             ],
             "properties": {
@@ -126,6 +112,18 @@
             }
         },
         {
+            "name": "[parameters('virtualNetworkName')]",
+            "type": "Microsoft.Network/virtualNetworks",
+            "apiVersion": "2019-09-01",
+            "location": "[parameters('location')]",
+            "properties": {
+                "addressSpace": {
+                    "addressPrefixes": "[parameters('addressPrefixes')]"
+                },
+                "subnets": "[parameters('subnets')]"
+            }
+        },
+        {
             "name": "[parameters('publicIpAddressName')]",
             "type": "Microsoft.Network/publicIpAddresses",
             "apiVersion": "2019-02-01",
@@ -135,10 +133,7 @@
             },
             "sku": {
                 "name": "[parameters('publicIpAddressSku')]"
-            },
-            "zones": [
-                "[parameters('zone')]"
-            ]
+            }
         },
         {
             "name": "[parameters('dataDiskResources')[copyIndex()].name]",
@@ -152,10 +147,7 @@
             "copy": {
                 "name": "managedDiskResources",
                 "count": "[length(parameters('dataDiskResources'))]"
-            },
-            "zones": [
-                "[parameters('zone')]"
-            ]
+            }
         },
         {
             "name": "[parameters('virtualMachineName')]",
@@ -178,9 +170,9 @@
                         }
                     },
                     "imageReference": {
-                        "publisher": "MicrosoftWindowsDesktop",
-                        "offer": "Windows-10",
-                        "sku": "rs5-pro",
+                        "publisher": "MicrosoftWindowsServer",
+                        "offer": "WindowsServer",
+                        "sku": "2019-Datacenter",
                         "version": "latest"
                     },
                     "copy": [
@@ -220,38 +212,10 @@
                         }
                     }
                 },
-                "licenseType": "Windows_Client",
                 "diagnosticsProfile": {
                     "bootDiagnostics": {
                         "enabled": true
                     }
-                }
-            },
-            "zones": [
-                "[parameters('zone')]"
-            ]
-        },
-        {
-            "name": "[concat('shutdown-computevm-', parameters('virtualMachineName'))]",
-            "type": "Microsoft.DevTestLab/schedules",
-            "apiVersion": "2017-04-26-preview",
-            "location": "[parameters('location')]",
-            "dependsOn": [
-                "[concat('Microsoft.Compute/virtualMachines/', parameters('virtualMachineName'))]"
-            ],
-            "properties": {
-                "status": "[parameters('autoShutdownStatus')]",
-                "taskType": "ComputeVmShutdownTask",
-                "dailyRecurrence": {
-                    "time": "[parameters('autoShutdownTime')]"
-                },
-                "timeZoneId": "[parameters('autoShutdownTimeZone')]",
-                "targetResourceId": "[resourceId('Microsoft.Compute/virtualMachines', parameters('virtualMachineName'))]",
-                "notificationSettings": {
-                    "status": "[parameters('autoShutdownNotificationStatus')]",
-                    "notificationLocale": "[parameters('autoShutdownNotificationLocale')]",
-                    "timeInMinutes": "30",
-                    "emailRecipient": "[parameters('autoShutdownNotificationEmail')]"
                 }
             }
         }

@@ -368,3 +368,4 @@ FodyWeavers.xsd
 service/.idea
 service/Microsoft.DSX.ProjectTemplate.API/.config
 service/Microsoft.DSX.ProjectTemplate.API/Properties/ServiceDependencies
+infrastructure/terraform/.terraform

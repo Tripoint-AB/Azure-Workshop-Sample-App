@@ -11,9 +11,9 @@ provider "azurerm" {
 
 terraform {
   backend "azurerm" {
-    resource_group_name  = "Kollmorgen"
-    storage_account_name = "stotfstateci"
+    resource_group_name  = "rg-workshop"
+    storage_account_name = "stotfstate"
     container_name       = "state"
-    key                  = "dev/webapps/terraform.tfstate"
+    key                  = "ci/terraform.tfstate"
   }
 }

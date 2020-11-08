@@ -1,8 +1,8 @@
 locals {
   tags = {
-    "environment" : "dev"
-    "product" : "webshop"
-    "team" : "e-com"
+    "environment" : "ci"
+    "product" : "sample-api"
+    "team" : "workshop"
   }
 }
 
